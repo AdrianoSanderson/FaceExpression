@@ -18,7 +18,7 @@ function App() {
 
   },[])
 
-
+//Carregando os modelos
   useEffect(() =>{
     Promise.all([
       faceapi.loadTinyFaceDetectorModel('/models'),
@@ -29,6 +29,7 @@ function App() {
     })
   }, [])
 
+//Detectando a face
   useEffect(() => {
     const videoEl = videoRef.current
     if(!videoEl) return
