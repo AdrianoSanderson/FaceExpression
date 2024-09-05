@@ -24,6 +24,10 @@ function App() {
         <video autoPlay ref={videoRef}></video>
       </div>
 
+      <div className="w-1/2">
+        <h1 className="text-white">Gráfico</h1>
+      </div>
+
     </section>
   )
 }
