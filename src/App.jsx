@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react"
+import * as faceapi from 'face-api.js'
 
 function App() {
 
@@ -16,6 +17,32 @@ function App() {
     })
 
   },[])
+
+
+  useEffect(() =>{
+    Promise.all([
+      faceapi.loadTinyFaceDetectorModel('/models'),
+      faceapi.loadFaceLandmarkModel('/models'),
+      faceapi.loadFaceExpressionModel('/models'),
+    ]).then(() =>{
+      console.log('Models Loaded')
+    })
+  }, [])
+
+  useEffect(() => {
+    const videoEl = videoRef.current
+    if(!videoEl) return
+
+    async function detect() {
+      const detection = await faceapi.detectSingleFace(
+        videoEl, new faceapi.TinyFaceDetectorOptions()
+        )
+      console.log(detection)
+    }
+
+    detect()
+  }, [])
+
 
   return (
     <section className="bg-gray-950 h-screen flex items-center justify-center">
