@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react"
 import * as faceapi from 'face-api.js'
 
 function App() {
-  
+
   const interval = useRef(null)
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
@@ -10,7 +10,6 @@ function App() {
   console.log(videoRef.current)
 
   useEffect(() => {
-
     navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
       const videoEl = videoRef.current
       if (videoEl) {
@@ -35,38 +34,45 @@ function App() {
     interval.current = setInterval(() => {
       const videoEl = videoRef.current
       const canvasEl = canvasRef.current
-  
+
       if (!videoEl || !canvasEl) return
-  
+
       async function detect() {
         const detection = await faceapi.detectSingleFace(
           videoEl, new faceapi.TinyFaceDetectorOptions()
-        )
-  
-        console.log(detection)
-  
+        ).withFaceLandmarks().withFaceExpressions()
+
+        console.log(detection.expressions.asSortedArray()[0].expression)
+
         //Desenhar no canvas
         if (detection) {
           const dimensions = {
             width: videoEl.offsetWidth,
             height: videoEl.offsetHeight,
           }
-  
-          faceapi.matchDimensions(canvasEl, dimensions)
-          const resizeResults = faceapi.resizeResults(detection, dimensions)
-          faceapi.draw.drawDetections(canvasEl, resizeResults)
+
+          faceapi.matchDimensions(canvasEl, dimensions);
+          const resizeResults = faceapi.resizeResults(detection, dimensions);
+          faceapi.draw.drawDetections(canvasEl, resizeResults);
+          faceapi.draw.drawFaceLandmarks(canvasEl, resizeResults);
+          faceapi.draw.drawFaceExpressions(canvasEl, resizeResults)
         }
       }
-  
-      detect()     
-    }, 1000);
+      detect()
+    }, 2000);
   }
 
+  function finish() {
+    if (interval.current) {
+      clearInterval(interval.current)
+      interval.current = null
 
-
+      console.log("Intervalo finalizado")
+    }
+  }
   return (
     <>
-      <section className="bg-gray-950 flex items-center justify-center">
+      <section className="flex items-center">
 
         <div className="relative bg-slate-500 aspect-video">
           <div className="relative">
@@ -80,9 +86,11 @@ function App() {
         </div>
       </section>
 
-      <div>
-        <button onClick={init}>Iniciar</button> <br />
-        <button onClick={() => clearInterval(interval.current)}>Finalizar</button>
+      <div className="flex items-center justify-center mt-4 gap-4">
+        <button className="bg-blue-600 w-48 h-7 rounded-lg text-white"
+        onClick={init}>Iniciar</button> <br />
+        <button className="bg-blue-600 w-48 h-7 rounded-lg text-white"
+        onClick={finish}>Finalizar</button>
       </div>
     </>
   )
