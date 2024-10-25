@@ -3,6 +3,11 @@ import * as faceapi from 'face-api.js'
 
 function App() {
 
+  let arrayExpressions = []
+  let arrayAmountExpressions = []
+
+  let surpreso, enojado, medo, triste, nervoso, feliz, neutro
+
   const interval = useRef(null)
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
@@ -31,9 +36,14 @@ function App() {
 
   //Detectando a face
   function init() {
+    const videoEl = videoRef.current
+    const canvasEl = canvasRef.current
+
+    surpreso = enojado = medo = triste = nervoso = feliz = neutro = 0
+    arrayExpressions = []
+    /**** Limpar o array "arrayAmountExpressions"****/
+
     interval.current = setInterval(() => {
-      const videoEl = videoRef.current
-      const canvasEl = canvasRef.current
 
       if (!videoEl || !canvasEl) return
 
@@ -42,7 +52,7 @@ function App() {
           videoEl, new faceapi.TinyFaceDetectorOptions()
         ).withFaceLandmarks().withFaceExpressions()
 
-        console.log(detection.expressions.asSortedArray()[0].expression)
+        //console.log(detection.expressions)
 
         //Desenhar no canvas
         if (detection) {
@@ -50,12 +60,14 @@ function App() {
             width: videoEl.offsetWidth,
             height: videoEl.offsetHeight,
           }
-
+          
           faceapi.matchDimensions(canvasEl, dimensions);
           const resizeResults = faceapi.resizeResults(detection, dimensions);
           faceapi.draw.drawDetections(canvasEl, resizeResults);
           faceapi.draw.drawFaceLandmarks(canvasEl, resizeResults);
           faceapi.draw.drawFaceExpressions(canvasEl, resizeResults)
+          
+          arrayExpressions.push(detection.expressions.asSortedArray()[0].expression)
         }
       }
       detect()
@@ -68,6 +80,34 @@ function App() {
       interval.current = null
 
       console.log("Intervalo finalizado")
+
+      arrayExpressions.forEach(exp => {
+        if (exp === "angry") {
+          nervoso++
+        }
+        if (exp === "disgusted") {
+          enojado++
+        }
+        if (exp === "fearful") {
+          medo++
+        }
+        if (exp === "happy") {
+          feliz++
+        }
+        if (exp === "neutral") {
+          neutro++
+        }
+        if (exp === "sad") {
+          triste++
+        }
+        if (exp === "surprised") {
+          surpreso++
+        }
+      })
+
+      console.log(nervoso, enojado, medo, feliz, neutro, triste, surpreso)
+      arrayAmountExpressions.push(nervoso, enojado, medo, feliz, neutro, triste, surpreso)
+      console.log(arrayAmountExpressions)
     }
   }
   return (
@@ -88,9 +128,9 @@ function App() {
 
       <div className="flex items-center justify-center mt-4 gap-4">
         <button className="bg-blue-600 w-48 h-7 rounded-lg text-white"
-        onClick={init}>Iniciar</button> <br />
+          onClick={init}>Iniciar</button> <br />
         <button className="bg-blue-600 w-48 h-7 rounded-lg text-white"
-        onClick={finish}>Finalizar</button>
+          onClick={finish}>Finalizar</button>
       </div>
     </>
   )
