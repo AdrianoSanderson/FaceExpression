@@ -1,12 +1,14 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import * as faceapi from 'face-api.js'
+import Chart from "react-apexcharts"
 
 function App() {
 
+  let surpreso, enojado, medo, triste, nervoso, feliz, neutro
   let arrayExpressions = []
   let arrayAmountExpressions = []
-
-  let surpreso, enojado, medo, triste, nervoso, feliz, neutro
+  
+  const [arrayGraphic, setArrayGraphic] = useState([])
 
   const interval = useRef(null)
   const videoRef = useRef(null)
@@ -41,7 +43,6 @@ function App() {
 
     surpreso = enojado = medo = triste = nervoso = feliz = neutro = 0
     arrayExpressions = []
-    /**** Limpar o array "arrayAmountExpressions"****/
 
     interval.current = setInterval(() => {
 
@@ -60,13 +61,13 @@ function App() {
             width: videoEl.offsetWidth,
             height: videoEl.offsetHeight,
           }
-          
+
           faceapi.matchDimensions(canvasEl, dimensions);
           const resizeResults = faceapi.resizeResults(detection, dimensions);
           faceapi.draw.drawDetections(canvasEl, resizeResults);
           faceapi.draw.drawFaceLandmarks(canvasEl, resizeResults);
           faceapi.draw.drawFaceExpressions(canvasEl, resizeResults)
-          
+
           arrayExpressions.push(detection.expressions.asSortedArray()[0].expression)
         }
       }
@@ -105,9 +106,8 @@ function App() {
         }
       })
 
-      console.log(nervoso, enojado, medo, feliz, neutro, triste, surpreso)
       arrayAmountExpressions.push(nervoso, enojado, medo, feliz, neutro, triste, surpreso)
-      console.log(arrayAmountExpressions)
+      setArrayGraphic(arrayAmountExpressions)
     }
   }
   return (
@@ -120,10 +120,32 @@ function App() {
             <canvas ref={canvasRef} className="absolute inset-0 w-full h-full"></canvas>
           </div>
         </div>
+        <Chart
+          type='pie'
+          width={630}
+          height={398}
 
-        <div className="w-1/2">
-          <h1 className="text-white">Gráfico</h1>
-        </div>
+          series={arrayGraphic}
+
+          options={{
+            title: {
+              text: 'Gráfico de expressões',
+              style: { fontSize: '20px' }
+            },
+            labels: ['Nervoso', 'Enojado', 'Medo', 'Feliz', 'Neutro', 'Triste', 'Surpreso'],
+            noData: {
+              text: "Carregando...",
+              align: 'center',
+              verticalAlign: 'middle',
+              offsetX: 0,
+              offsetY: 0,
+              style: {
+                fontSize: '20px',
+              }
+            }
+          }}
+        >
+        </Chart>
       </section>
 
       <div className="flex items-center justify-center mt-4 gap-4">
