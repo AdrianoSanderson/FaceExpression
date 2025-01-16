@@ -1,8 +1,25 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Face Expression
 
-Currently, two official plugins are available:
+O Software de Reconhecimento de Expressões Faciais e Emoções é uma MVP (Minimum Viable Product) desenvolvido para apoiar psicólogos no reconhecimento emocional de seus pacientes durante as consultas. O objetivo é oferecer uma ferramenta inovadora e acessível que utiliza tecnologias modernas para identificar expressões faciais e emoções em tempo real, ajudando a aprimorar a interação e a qualidade do atendimento psicológico.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+## Screenshots
+
+![Logo da Minha Empresa](https://uploaddeimagens.com.br/images/004/882/780/full/faceExpressionImg.jpg?1737037912)
+## Stack utilizada
+
+**Front-end:** React, JavaScript, TailwindCSS.
+
+**Bibliotecas** TensorFlow, FaceAPI, Apexcharts.
+
+
+
+## Melhorias
+
+Por ser uma MVP, o software está em fase inicial de desenvolvimento, buscando validar o conceito e atender às necessidades iniciais do público-alvo, com melhorias previstas para aumentar sua funcionalidade e escalabilidade em futuras versões.
+
+## Autores
+
+- [Adriano Sanderson](https://github.com/AdrianoSanderson)
+
